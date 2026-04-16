@@ -6,29 +6,33 @@ namespace PJATK_APBD_Cw5_s33974.Models;
 public class Reservation
 {
     private static int _nextId = 1;
-    private int Id { get; set; } 
-    int RoomId { get; set; }
-    string OrganizerName { get; set; } 
-    string Topic { get; set; } 
-    DateTime Date { get; set; }
-    DateTime StartTime { get; set; }
-    DateTime EndTime { get; set; }
-    Status Status { get; set; }
+    public int Id { get; set; } 
+    public int RoomId { get; set; }
+    public string OrganizerName { get; set; } 
+    public string Topic { get; set; } 
+    public DateOnly Date { get; set; }
+    public TimeSpan StartTime { get; set; }
+    public TimeSpan EndTime { get; set; }
+    public Status Status { get; set; }
 
-    public Reservation(int roomId, string organizerName, string topic, DateTime startTime, DateTime endTime,
+    public Reservation(int roomId, string organizerName, string topic, DateOnly date, TimeSpan startTime, TimeSpan endTime,
         string resStatus)
     {
-        Id = _nextId;
+        Id = _nextId++;
         RoomId = roomId;
         OrganizerName = organizerName;
         Topic = topic;
+        Date = date;
         StartTime = startTime;
         EndTime = endTime;
-        Date = StartTime.Date;
         if (Enum.TryParse<Status>(resStatus, true, out var status))
         {
             Status = status;
         }
         else throw new Exception($"Invalid reservation status {status}");
+    }
+    public string GetStatus()
+    {
+        return Status.ToString();
     }
 }

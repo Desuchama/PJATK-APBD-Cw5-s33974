@@ -110,7 +110,7 @@ public class RoomsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Post([FromBody] CreateRoomDto c)
+    public IActionResult Post([FromBody] UpdateRoomDto c)
     {
         if (!Enum.TryParse<BuildingCode>(c.BuildingCode, false, out var parsed))
         {
@@ -127,7 +127,6 @@ public class RoomsController : ControllerBase
             HasProjector = c.HasProjector,
             IsActive = c.IsActive
         };
-        Console.WriteLine(room.Id);
         _rooms.Add(room);
         return CreatedAtAction(nameof(GetById), new {id = room.Id}, room);
     }

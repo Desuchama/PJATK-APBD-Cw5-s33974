@@ -9,7 +9,7 @@ namespace PJATK_APBD_Cw5_s33974.Controllers;
 [Route("api/[controller]")]
 public class ReservationsController : ControllerBase
 {
-    private static List<Reservation> _reservations =
+    public static List<Reservation> _reservations =
     [
         new Reservation()
         {
@@ -58,7 +58,7 @@ public class ReservationsController : ControllerBase
     
     [HttpGet]
     public IActionResult Get(DateOnly? date, string? status, int? roomId)
-    {   return Ok(_reservations
+    {   var reservation = _reservations
             .Where(r => r.Date == date || date is null)
             .Where(r => r.Status.ToString() == status  || status is null)
             .Where(r => r.RoomId == roomId || roomId is null)
@@ -72,7 +72,12 @@ public class ReservationsController : ControllerBase
                 StartTime = r.StartTime,
                 EndTime = r.StartTime,
                 Status = r.GetStatus()
-            }));
+            });
+        if (reservation.LastOrDefault() == null)
+        {
+            return NotFound("No reservations with matching parameters.");
+        }
+        else return Ok(reservation);
     }
     [HttpGet("{id:int}")]
     public IActionResult GetById(int id)
@@ -102,6 +107,8 @@ public class ReservationsController : ControllerBase
         {
             return BadRequest($"Invalid Status: {cRes.Status}");
         }
+        if (!CheckAvailable(cRes)) return 
+            BadRequest($"Room unavailable");
 
         var reservation = new Reservation()
         {
@@ -125,6 +132,9 @@ public class ReservationsController : ControllerBase
         {
             return NotFound($"Reservation with id: {id} does not exist");
         }
+        // if (!CheckAvailable(uRes)) return 
+        //     BadRequest($"Room unavailable");
+        
         else if (Enum.TryParse<Status>(uRes.Status, true, out var parsed))
         {
             reservation.RoomId = uRes.RoomId;
@@ -149,5 +159,19 @@ public class ReservationsController : ControllerBase
         }
         _reservations.Remove(reservation);
         return NoContent();
+    }
+
+    private bool CheckAvailable(UpdateReservationDto uRes)
+    {
+        var roomExists = RoomsController._rooms
+            .Where(r => r.Id == uRes.RoomId)
+            .FirstOrDefault(r => r.IsActive);
+        var reservationOverlap = _reservations
+            .Where(r => r.Date == uRes.Date)
+            .Where(r => r.RoomId == uRes.RoomId)
+            .Where(r => r.Status != Status.Cancelled)
+            .FirstOrDefault(r => r.EndTime >= uRes.StartTime && r.StartTime <= uRes.EndTime ||
+                                 uRes.EndTime >= r.StartTime && uRes.StartTime <= r.EndTime);
+        return (roomExists != null) && (reservationOverlap == null);
     }
 }

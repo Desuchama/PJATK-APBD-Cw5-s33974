@@ -9,7 +9,7 @@ namespace PJATK_APBD_Cw5_s33974.Controllers;
 [Route("api/[controller]")]
 public class RoomsController : ControllerBase
 {
-    private static List<Room> _rooms =
+    public static List<Room> _rooms =
     [
         new Room()
         {
@@ -160,7 +160,14 @@ public class RoomsController : ControllerBase
         {
             return NotFound($"Room with id: {id} does not exist");
         }
-        _rooms.Remove(room);
-        return NoContent();
+        var reservation = ReservationsController._reservations
+            .Where(r => r.RoomId == id)
+            .FirstOrDefault(r => r.Status != Status.Cancelled);
+        if (reservation is null)
+        {
+            _rooms.Remove(room);
+            return NoContent();
+        }
+        else return BadRequest($"A planned or confirmed reservation exists for this room");
     }
 }

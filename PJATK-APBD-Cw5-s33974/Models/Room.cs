@@ -13,21 +13,6 @@ public class Room
     public bool HasProjector { get; set; }
     public bool IsActive { get; set; }
     
-    // public Room (string name, string buildingCode, int floor, int capacity, bool hasProjector, bool isActive) 
-    // {
-    //     Id = _nextId++;
-    //     Name = name;
-    //     Floor = floor;
-    //     Capacity = capacity;
-    //     HasProjector = hasProjector;
-    //     IsActive = isActive;
-    //
-    //     if (Enum.TryParse<BuildingCode>(buildingCode, true, out var code))
-    //     {
-    //         BuildingCode = code;
-    //     }
-    //     else throw new Exception($"Invalid building code {buildingCode}");
-    // }
     public string GetCode()
     {
         return BuildingCode.ToString();

@@ -2,9 +2,8 @@
 
 namespace PJATK_APBD_Cw5_s33974.DTOs;
 
-public class RoomDto
+public class CreateRoomDto
 {
-    public int Id { get; set; }
     [Required]
     public string Name { get; set; } = string.Empty;
     [Required]

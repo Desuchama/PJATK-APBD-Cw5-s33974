@@ -4,7 +4,7 @@ namespace PJATK_APBD_Cw5_s33974.Models;
 
 public class Room
 {
-    private static int _nextId = 1;
+    //private static int _nextId = 1;
     public int Id { get; set; }
     public string Name { get; set; }
     public BuildingCode BuildingCode { get; set; }
@@ -13,21 +13,21 @@ public class Room
     public bool HasProjector { get; set; }
     public bool IsActive { get; set; }
     
-    public Room (string name, string buildingCode, int floor, int capacity, bool hasProjector, bool isActive) 
-    {
-        Id = _nextId++;
-        Name = name;
-        Floor = floor;
-        Capacity = capacity;
-        HasProjector = hasProjector;
-        IsActive = isActive;
-
-        if (Enum.TryParse<BuildingCode>(buildingCode, true, out var code))
-        {
-            BuildingCode = code;
-        }
-        else throw new Exception($"Invalid building code {buildingCode}");
-    }
+    // public Room (string name, string buildingCode, int floor, int capacity, bool hasProjector, bool isActive) 
+    // {
+    //     Id = _nextId++;
+    //     Name = name;
+    //     Floor = floor;
+    //     Capacity = capacity;
+    //     HasProjector = hasProjector;
+    //     IsActive = isActive;
+    //
+    //     if (Enum.TryParse<BuildingCode>(buildingCode, true, out var code))
+    //     {
+    //         BuildingCode = code;
+    //     }
+    //     else throw new Exception($"Invalid building code {buildingCode}");
+    // }
     public string GetCode()
     {
         return BuildingCode.ToString();
